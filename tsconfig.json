@@ -1,0 +1,24 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "compilerOptions": {
+        "target": "ES2015",
+        "module": "CommonJS",
+        "outDir": "./dist/",
+        "strict": true,
+        "sourceMap": false,
+        "removeComments": true,
+        "moduleResolution": "Node",
+        "newLine": "lf",
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "noFallthroughCasesInSwitch": true,
+        "resolveJsonModule": true
+    },
+    "include": [
+        "./src/*"
+    ],
+    "exclude": [
+        "./dist/*"
+    ]
+}
