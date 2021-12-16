@@ -1,11 +1,13 @@
 import express from 'express';
-import bcrypt from 'bcrypt';
+
+import * as controller from '../controllers/users';
+import User from '../models/user';
 
 const router = express.Router();
 
 router.get('/login', async (req, res) => {
-    const { body } = req;
-    const isValidLogin = 'user' in body && 'pwd' in body;
+    const body = req.body;
+    const isValidLogin = Boolean(body.user) && Boolean(body.pwd);
 
     if (!isValidLogin) {
         return res.send({
@@ -14,7 +16,15 @@ router.get('/login', async (req, res) => {
         });
     }
 
-    // TODO: verify user login
+    const user = new User();
+    user.name = body.user;
+    user.password = body.pwd;
+
+    controller.testLogin(user);
+});
+
+router.get('/register', async (req, res) => {
+    // TODO: implement registration
 });
 
 export default router;

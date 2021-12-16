@@ -8,7 +8,7 @@ type UserOptions = {
     id?: number,
     name?: string,
     email?: string,
-};
+}
 
 /**
  * Registers a user to the database
@@ -24,7 +24,7 @@ export async function register(user: User): Promise<boolean> {
     }
 
     // the password from user isn't hashed
-    const hashedPwd = await bcrypt.hash(user.password, ROUNDS);
+    const hashedPwd = await bcrypt.hash(user.password!, ROUNDS);
 
     await psql.query(
         `INSERT INTO users
@@ -54,8 +54,8 @@ export async function findUser(
     }
 
     // find a key that has a value
-    const param = Object.keys(options)
-        .find((key) => Boolean(options[key]));
+    const param = Object.entries(options)
+        .find((entry) => Boolean(entry[1]));
 
     const { rows } = await psql.query(
         `SELECT * FROM users WHERE ${param} = $1;`,
@@ -75,12 +75,12 @@ export async function findUser(
  */
 export async function doesUserExist(options: UserOptions): Promise<boolean> {
     if (!options.id || !options.email || !options.name) {
-        return;
+        return false;
     }
 
     // find a key that has a value
-    const param = Object.keys(options)
-        .find((key) => Boolean(options[key]));
+    const param = Object.entries(options)
+        .find((entry) => Boolean(entry[1]));
 
     const { rows } = await psql.query(
         `SELECT id FROM users WHERE ${param} = $1;`,
@@ -107,5 +107,5 @@ export async function testLogin(user: User): Promise<boolean> {
     );
 
     // the password from user object isn't hashed, we can just check it.
-    return bcrypt.compare(user.password, rows[0]);
+    return bcrypt.compare(user.password!, rows[0]);
 }
