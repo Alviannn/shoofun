@@ -15,7 +15,7 @@ export async function register(user: User) {
         `INSERT INTO users
             (name, display, email, password, phone)
         VALUES
-            (?, ?, ?, ?, ?);`,
+            ($1, $2, $3, $4, $5);`,
         [user.name, user.display, user.password, user.phone]
     );
 }
