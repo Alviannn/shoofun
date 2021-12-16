@@ -1,19 +1,24 @@
 import express from 'express';
 import fsp from 'fs/promises';
+import dotenv from 'dotenv';
+
 import userRouter from './routes/users';
 
 import { Client } from 'pg';
 
-export const psql = new Client({
-    host: 'localhost',
-    port: 5432,
-    user: 'postgres',
-    database: 'shoofun',
-    password: '1341'
-});
+dotenv.config();
 
+const { env } = process;
 const app = express();
-const port = process.env.PORT || 3000;
+const port = env.PORT || 3000;
+
+export const psql = new Client({
+    host: env.DB_HOST,
+    port: parseInt(env.DB_PORT!),
+    database: env.DB_DATABASE,
+    user: env.DB_USER,
+    password: env.DB_PASSWORD
+});
 
 // config
 app.set('view engine', 'ejs');
