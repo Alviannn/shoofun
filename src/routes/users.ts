@@ -24,7 +24,7 @@ router.get('/register', async (req, res) => {
     const { body } = req;
 
     const user = new User(
-        -1,
+        User.UNREGISTERED_ID,
         body.username, body.email, body.password,
         body.display, body.phone
     );

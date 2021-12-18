@@ -1,6 +1,8 @@
 export default class User {
 
-    /** Has the value of `-1` when not registered */
+    static UNREGISTERED_ID = -1;
+
+    /** Has the value of {@link UNREGISTERED_ID} when not registered */
     id?: number;
     username?: string;
     display?: string;
