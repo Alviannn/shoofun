@@ -11,13 +11,14 @@ type UserOptions = {
 }
 
 /**
- * Registers a user to the database
+ * Registers a user to the database.
+ * Upon receiving the object, it should already been checked in the frontend.
  *
- * @param user the user object recevied from client (incomplete)
+ * NOTE: There's no double check for web scraper.
+ *
+ * @param user is expected to be complete
  */
-export async function register(user: User): Promise<boolean> {
-    // TODO: validate object
-
+export async function registerUser(user: User): Promise<boolean> {
     const userExist = await doesUserExist({ email: user.email });
     if (!userExist) {
         return false;
@@ -28,10 +29,10 @@ export async function register(user: User): Promise<boolean> {
 
     await psql.query(
         `INSERT INTO users
-            (name, display, email, password, phone)
+            (name, email, password, display, phone)
         VALUES
             ($1, $2, $3, $4, $5);`,
-        [user.name, user.display, hashedPwd, user.phone]
+        [user.username, hashedPwd, user.display, user.phone]
     );
 
     return true;

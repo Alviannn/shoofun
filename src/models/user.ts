@@ -2,7 +2,7 @@ export default class User {
 
     /** Has the value of `-1` when not registered */
     id?: number;
-    name?: string;
+    username?: string;
     display?: string;
     email?: string;
     /** Possibly not hashed if received from client */
@@ -10,18 +10,27 @@ export default class User {
     phone?: string;
 
     constructor(
-        id: number | null,
-        name: string, email: string, password: string,
-        display: string | null, phone: string);
+        id: number,
+        username: string, email: string, password: string,
+        display: string, phone: string);
+
+    constructor(username: string, password: string);
 
     constructor();
 
     constructor(...args: any[]) {
-        if (args.length !== 6) {
+        if (args.length === 2) {
+            this.username = args[0];
+            this.password = args[1];
             return;
         }
 
-        Object.assign(this, args);
+        this.id = args[0];
+        this.username = args[1];
+        this.email = args[2];
+        this.password = args[3];
+        this.display = args[4];
+        this.phone = args[5];
     }
 
 }

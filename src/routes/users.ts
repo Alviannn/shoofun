@@ -6,25 +6,37 @@ import User from '../models/user';
 const router = express.Router();
 
 router.get('/login', async (req, res) => {
-    const body = req.body;
-    const isValidLogin = Boolean(body.user) && Boolean(body.pwd);
+    const { body } = req;
 
-    if (!isValidLogin) {
-        return res.send({
-            status: 'error',
-            message: 'Invalid body content!'
-        });
+    const user = new User(body.username, body.password);
+    const success = await controller.testLogin(user);
+    // TODO: add token or something to have access to the account
+    const msg = { status: 'success' };
+
+    if (!success) {
+        msg.status = 'error';
     }
 
-    const user = new User();
-    user.name = body.user;
-    user.password = body.pwd;
-
-    controller.testLogin(user);
+    res.send(msg);
 });
 
 router.get('/register', async (req, res) => {
-    // TODO: implement registration
+    const { body } = req;
+
+    const user = new User(
+        -1,
+        body.username, body.email, body.password,
+        body.display, body.phone
+    );
+
+    const success = await controller.registerUser(user);
+    const msg = { status: 'success' };
+
+    if (!success) {
+        msg.status = 'error';
+    }
+
+    res.send(msg);
 });
 
 export default router;
