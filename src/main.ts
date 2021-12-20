@@ -34,5 +34,5 @@ app.listen(port, async () => {
     const initSql = await fsp.readFile('./sql/init.sql', { encoding: 'utf8' });
     await psql.query(initSql);
 
-    console.log(`Server is running on https://localhost:${port}/`);
+    console.log(`Server is running on http://localhost:${port}/`);
 });

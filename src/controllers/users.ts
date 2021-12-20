@@ -20,7 +20,7 @@ type UserOptions = {
  */
 export async function registerUser(user: User): Promise<boolean> {
     const userExist = await doesUserExist({ email: user.email });
-    if (!userExist) {
+    if (userExist) {
         return false;
     }
 
@@ -32,7 +32,7 @@ export async function registerUser(user: User): Promise<boolean> {
             (name, email, password, display, phone)
         VALUES
             ($1, $2, $3, $4, $5);`,
-        [user.username, hashedPwd, user.display, user.phone]
+        [user.username, user.email, hashedPwd, user.display, user.phone]
     );
 
     return true;
@@ -98,15 +98,11 @@ export async function doesUserExist(options: UserOptions): Promise<boolean> {
  * @returns `true` if the user is valid, `false` is otherwise.
  */
 export async function testLogin(user: User): Promise<boolean> {
-    if (!user.id) {
-        return false;
-    }
-
     const { rows } = await psql.query(
-        'SELECT password FROM users WHERE email = $1;',
-        [user.email]
+        'SELECT password FROM users WHERE name = $1;',
+        [user.username]
     );
 
     // the password from user object isn't hashed, we can just check it.
-    return bcrypt.compare(user.password!, rows[0]);
+    return bcrypt.compare(user.password!, rows[0].password);
 }
