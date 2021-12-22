@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import User from '../models/user';
 import { psql } from '../main';
+import jwt from 'jsonwebtoken';
 
 const ROUNDS = 12;
 
@@ -97,7 +98,7 @@ export async function doesUserExist(options: UserOptions): Promise<boolean> {
  * @param user the user object recevied from client (incomplete)
  * @returns `true` if the user is valid, `false` is otherwise.
  */
-export async function testLogin(user: User): Promise<boolean> {
+export async function loginUser(user: User): Promise<boolean> {
     const { rows } = await psql.query(
         'SELECT password FROM users WHERE name = $1;',
         [user.username]
