@@ -61,6 +61,8 @@ export async function loginUser(req: Request, res: Response): Promise<unknown> {
     const msg = { status: 'success', message: 'User successfully logs-in' };
 
     const foundUser = await utils.findUser({ username: user.username });
+    console.log(foundUser);
+
     if (!foundUser) {
         msg.status = 'error';
         msg.message = 'Username or password is incorrect!';
@@ -78,12 +80,18 @@ export async function loginUser(req: Request, res: Response): Promise<unknown> {
             return res.status(400).json(msg);
         }
 
+        const accessToken = jwt.sign(
+            { username: foundUser.username, email: foundUser.email },
+            process.env.ACCESS_TOKEN_SECRET!
+        );
+
+        Object.assign(msg, { accessToken });
+
+        return res.json(msg);
     } catch (err) {
         msg.status = 'error';
         msg.message = 'Failed to login user!';
 
         return res.status(500).json(msg);
     }
-
-    return res.json(msg);
 }

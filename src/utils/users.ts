@@ -16,7 +16,7 @@ type UserParams = [string, string | number];
 export const HASH_ROUNDS = 12;
 
 function grabUsedParams(options: UserOptions): UserParams | undefined {
-    if (!options.id || !options.email || !options.username) {
+    if (!options) {
         return;
     }
 
@@ -74,7 +74,7 @@ export async function doesUserExist(options: UserOptions): Promise<boolean> {
             [param[1]]
         );
 
-        return Boolean(rows);
+        return Boolean(rows.length);
     } catch (err) {
         return false;
     }
