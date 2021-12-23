@@ -1,109 +1,89 @@
 import bcrypt from 'bcrypt';
 import User from '../models/user';
-import { psql } from '../main';
 import jwt from 'jsonwebtoken';
+import * as utils from '../utils/users';
 
-const ROUNDS = 12;
-
-type UserOptions = {
-    id?: number,
-    name?: string,
-    email?: string,
-}
+import { psql } from '../main';
+import { Request, Response } from 'express';
 
 /**
  * Registers a user to the database.
  * Upon receiving the object, it should already been checked in the frontend.
  *
  * NOTE: There's no double check for web scraper.
- *
- * @param user is expected to be complete
  */
-export async function registerUser(user: User): Promise<boolean> {
-    const userExist = await doesUserExist({ email: user.email });
+export async function registerUser(
+    req: Request, res: Response): Promise<unknown> {
+
+    const { body } = req;
+    // incomplete form of the object from client
+    const user = new User(
+        User.UNREGISTERED_ID,
+        body.username, body.email, body.password,
+        body.display, body.phone
+    );
+
+    const userExist = await utils.doesUserExist({ email: user.email });
+    const msg = { status: 'success', message: 'Successfully registered user!' };
+
     if (userExist) {
-        return false;
+        msg.status = 'error';
+        msg.message = 'User is already registered!';
+
+        return res.status(400).json(msg);
     }
 
     // the password from user isn't hashed
-    const hashedPwd = await bcrypt.hash(user.password!, ROUNDS);
+    const hashedPwd = await bcrypt.hash(user.password!, utils.HASH_ROUNDS);
 
-    await psql.query(
-        `INSERT INTO users
-            (name, email, password, display, phone)
-        VALUES
-            ($1, $2, $3, $4, $5);`,
-        [user.username, user.email, hashedPwd, user.display, user.phone]
-    );
+    try {
+        await psql.query(
+            `INSERT INTO users
+                (username, email, password, display, phone)
+            VALUES
+                ($1, $2, $3, $4, $5);`,
+            [user.username, user.email, hashedPwd, user.display, user.phone]
+        );
+    } catch (err) {
+        msg.status = 'error';
+        msg.message = 'Failed to register user!';
 
-    return true;
-}
-
-/**
- * Finds a user data based on a specific property.
- *
- * Although this is a bit expensive to be used for only checking existence,
- * there's an alternative called {@link doesUserExist}.
- *
- * @param options the options to find the user based on specific property.
- * @returns an array of user, will be empty if not found.
- */
-export async function findUser(
-    options: UserOptions): Promise<User[]> {
-
-    if (!options.id || !options.email || !options.name) {
-        return [];
+        return res.status(500).json(msg);
     }
 
-    // find a key that has a value
-    const param = Object.entries(options)
-        .find((entry) => Boolean(entry[1]));
-
-    const { rows } = await psql.query(
-        `SELECT * FROM users WHERE ${param} = $1;`,
-        [param]
-    );
-
-    return rows as User[];
+    return res.json(msg);
 }
 
-/**
- * This is the cheaper version of the function to check the user existence.
- *
- * Checking user existence using the {@link findUser} can be expensive
- * and bad practice since it grabs the entire user property.
- *
- * @param options the options to find the user based on specific property.
- */
-export async function doesUserExist(options: UserOptions): Promise<boolean> {
-    if (!options.id || !options.email || !options.name) {
-        return false;
+export async function loginUser(req: Request, res: Response): Promise<unknown> {
+    const { body } = req;
+
+    const user = new User(body.username, body.password);
+    const msg = { status: 'success', message: 'User successfully logs-in' };
+
+    const foundUser = await utils.findUser({ username: user.username });
+    if (!foundUser) {
+        msg.status = 'error';
+        msg.message = 'Username or password is incorrect!';
+
+        return res.status(400).json(msg);
     }
 
-    // find a key that has a value
-    const param = Object.entries(options)
-        .find((entry) => Boolean(entry[1]));
+    try {
+        // the password from user object isn't hashed, we can just check it.
+        const success = bcrypt.compare(user.password!, foundUser.password!);
+        if (!success) {
+            msg.status = 'error';
+            msg.message = 'Username or password is incorrect';
 
-    const { rows } = await psql.query(
-        `SELECT id FROM users WHERE ${param} = $1;`,
-        [param]
-    );
+            return res.status(400).json(msg);
+        }
 
-    return Boolean(rows);
-}
+    } catch (err) {
+        msg.status = 'error';
+        msg.message = 'Failed to login user!';
 
-/**
- * Tests user validity by their existence and password.
- *
- * @param user the user object recevied from client (incomplete)
- * @returns `true` if the user is valid, `false` is otherwise.
- */
-export async function loginUser(user: User): Promise<boolean> {
-    const { rows } = await psql.query(
-        'SELECT password FROM users WHERE name = $1;',
-        [user.username]
-    );
+        return res.status(500).json(msg);
+    }
 
-    // the password from user object isn't hashed, we can just check it.
-    return bcrypt.compare(user.password!, rows[0].password);
+    return res.json(msg);
 }
