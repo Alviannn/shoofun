@@ -3,6 +3,7 @@ import fsp from 'fs/promises';
 import dotenv from 'dotenv';
 
 import userRouter from './routes/users';
+import itemRouter from './routes/items';
 
 import { Client } from 'pg';
 
@@ -27,6 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // routes
 app.use('/user', userRouter);
+app.use('/item', itemRouter);
 
 app.listen(port, async () => {
     await psql.connect();

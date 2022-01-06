@@ -61,8 +61,6 @@ export async function loginUser(req: Request, res: Response): Promise<unknown> {
     const msg = { status: 'success', message: 'User successfully logs-in' };
 
     const foundUser = await utils.findUser({ username: user.username });
-    console.log(foundUser);
-
     if (!foundUser) {
         msg.status = 'error';
         msg.message = 'Username or password is incorrect!';
