@@ -1,7 +1,7 @@
 import User from '../models/user';
 import { psql } from '../main';
 
-type UserOptions = {
+export type UserOptions = {
     id?: number,
     username?: string,
     email?: string,

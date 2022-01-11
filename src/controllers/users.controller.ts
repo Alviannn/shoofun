@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import User from '../models/user';
 import jwt from 'jsonwebtoken';
-import * as utils from '../utils/users';
+import * as utils from '../utils/users.util';
 
 import { psql } from '../main';
 import { Request, Response } from 'express';

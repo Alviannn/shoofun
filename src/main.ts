@@ -2,8 +2,8 @@ import express from 'express';
 import fsp from 'fs/promises';
 import dotenv from 'dotenv';
 
-import userRouter from './routes/users';
-import itemRouter from './routes/items';
+import userRouter from './routes/users.route';
+import itemRouter from './routes/items.route';
 
 import { Client } from 'pg';
 
