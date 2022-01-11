@@ -27,8 +27,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // routes
-app.use('/user', userRouter);
-app.use('/item', itemRouter);
+app.use('v1/user', userRouter);
+app.use('v1/item', itemRouter);
 
 app.listen(port, async () => {
     await psql.connect();
