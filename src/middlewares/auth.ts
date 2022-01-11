@@ -8,14 +8,12 @@ function authHandler(req: Request, _: Response, next: NextFunction) {
     }
 
     const token = header.split(' ')[1];
-    console.log(token);
-
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!, (err, decode) => {
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!, (err) => {
         if (err) {
+            // TODO: redirect user to login page
             return console.error(err.message);
         }
 
-        console.log(decode);
         next();
     });
 }
