@@ -3,7 +3,7 @@ import User from '../models/user';
 import jwt from 'jsonwebtoken';
 import * as utils from '../utils/users.util';
 
-import { psql } from '../main';
+import { psql } from '../server';
 import { Request, Response } from 'express';
 
 /**

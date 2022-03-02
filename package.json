@@ -12,7 +12,7 @@
         "lint-fix": "eslint ./src --fix",
         "dev": "nodemon -e ts -x yarn auto"
     },
-    "author": "",
+    "author": "Alviannn",
     "license": "MIT",
     "devDependencies": {
         "@types/bcrypt": "^5.0.0",

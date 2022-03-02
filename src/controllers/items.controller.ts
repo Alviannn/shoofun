@@ -1,4 +1,4 @@
-import { psql } from '../main';
+import { psql } from '../server';
 import { Request, Response } from 'express';
 
 export async function allItems(req: Request, res: Response): Promise<unknown> {

@@ -1,5 +1,5 @@
 import User from '../models/user';
-import { psql } from '../main';
+import { psql } from '../server';
 
 type UserOptions = {
     id?: number,
