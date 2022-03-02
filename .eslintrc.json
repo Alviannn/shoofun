@@ -6,28 +6,41 @@
     },
     "extends": [
         "eslint:recommended",
-        "plugin:@typescript-eslint/recommended"
+        "plugin:@typescript-eslint/recommended",
+        "plugin:import/recommended",
+        "plugin:import/typescript"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": "latest"
     },
     "plugins": [
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "import"
     ],
     "rules": {
+        // typescript
         "@typescript-eslint/no-namespace": "off",
         "@typescript-eslint/no-empty-function": "warn",
         "@typescript-eslint/no-var-requires": "warn",
         "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/no-explicit-any": "warn",
         "@typescript-eslint/prefer-for-of": "warn",
+        "@typescript-eslint/no-require-imports": "error",
 
-        "arrow-parens": "error",
-        "brace-style": "error",
-        "block-spacing": "error",
-        "curly": "error",
-        "eqeqeq": "error",
+        // import
+        "import/first": "error",
+        "import/no-absolute-path": "error",
+        "import/no-self-import": "error",
+        "import/no-extraneous-dependencies": "error",
+        "import/exports-last": "error",
+        "import/extensions": ["error", "never"],
+        "import/newline-after-import": "error",
+
+        // security
+        "no-eval": "error",
+        "no-implied-eval": "error",
+        "no-new-func": "error",
 
         "no-var": "error",
         "no-empty": "warn",
@@ -37,17 +50,25 @@
         "no-unreachable-loop": "error",
         "no-self-compare": "warn",
         "no-template-curly-in-string": "warn",
+        "no-new-object": "error",
+        "no-new-wrappers": "error",
+        "no-labels": "error",
+        "no-label-var": "error",
 
         "prefer-const": "warn",
         "prefer-exponentiation-operator": "error",
 
         "keyword-spacing": "error",
+        "arrow-parens": "error",
+        "brace-style": "error",
+        "block-spacing": "error",
+        "eqeqeq": "error",
+        "curly": "error",
         "semi": "error",
         "yoda": "warn",
 
         "indent": ["error"],
         "comma-style": ["error", "last"],
-        "jsx-quotes": ["error", "prefer-single"],
         "quotes": ["error", "single"],
         "linebreak-style": ["error", "unix"],
         "max-len": [
