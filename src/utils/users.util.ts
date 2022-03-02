@@ -1,7 +1,7 @@
 import User from '../models/user';
 import { psql } from '../main';
 
-export type UserOptions = {
+type UserOptions = {
     id?: number,
     username?: string,
     email?: string,
@@ -13,7 +13,7 @@ export type UserOptions = {
  */
 type UserParams = [string, string | number];
 
-export const HASH_ROUNDS = 12;
+const HASH_ROUNDS = 12;
 
 function grabUsedParams(options: UserOptions): UserParams | undefined {
     if (!options) {
@@ -79,3 +79,5 @@ export async function doesUserExist(options: UserOptions): Promise<boolean> {
         return false;
     }
 }
+
+export { HASH_ROUNDS, UserParams };

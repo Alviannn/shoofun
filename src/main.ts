@@ -13,7 +13,7 @@ const { env } = process;
 const app = express();
 const port = env.PORT || 3000;
 
-export const psql = new Client({
+const psql = new Client({
     host: env.DB_HOST,
     port: parseInt(env.DB_PORT!),
     database: env.DB_DATABASE,
@@ -38,3 +38,5 @@ app.listen(port, async () => {
 
     console.log(`Server is running on http://localhost:${port}/`);
 });
+
+export { psql };
