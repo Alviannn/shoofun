@@ -1,83 +1,88 @@
-// import User from '../models/user';
-// import { psql } from '../server';
+import { getRepository } from 'typeorm';
+import { User } from '../entity/user.entity';
 
-// type UserOptions = {
-//     id?: number,
-//     username?: string,
-//     email?: string,
-// }
+type UserOptions = {
+    id?: number,
+    username?: string,
+    email?: string,
+}
 
-// /**
-//  * A key of string and value of either string or value,
-//  * it follows the format of {@link UserOptions}
-//  */
-// type UserParams = [string, string | number];
+/**
+ * The result from grabbing one entry that's not empty.
+ *
+ * If the {@link UserOptions} has both `id` and `email` not empty
+ * it'll get the `id` since that's the specified order.
+ */
+type UserParams = {
+    key: string,
+    value: string | number
+};
 
-// const HASH_ROUNDS = 12;
+const HASH_ROUNDS = 12;
+const USER_REPO = getRepository(User);
 
-// function grabUsedParams(options: UserOptions): UserParams | undefined {
-//     if (!options) {
-//         return;
-//     }
+function grabUsedParams(options: UserOptions): UserParams | undefined {
+    if (!options) {
+        return;
+    }
 
-//     // find a key that has a value
-//     return Object.entries(options)
-//         .find((entry) => Boolean(entry[1]));
-// }
+    // find a key that has a value
+    const res = Object.entries(options)
+        .find((entry) => Boolean(entry[1]));
 
-// /**
-//  * Finds a user data based on a specific property.
-//  *
-//  * Although this is a bit expensive to be used for only checking existence,
-//  * there's an alternative called {@link doesUserExist}.
-//  *
-//  * @param options the options to find the user based on specific property.
-//  * @returns a user object if exists, otherwise none at all
-//  */
-// export async function findUser(
-//     options: UserOptions): Promise<User | undefined> {
+    if (res) {
+        return { key: res[0], value: res[1] };
+    }
+}
 
-//     const param = grabUsedParams(options);
-//     if (!param) {
-//         return;
-//     }
+/**
+ * Finds a user data based on a specific property.
+ *
+ * Although this is a bit expensive to be used for only checking existence,
+ * there's an alternative called {@link doesUserExist}.
+ *
+ * @param options the options to find the user based on specific property.
+ * @returns a user object if exists, otherwise none at all
+ */
+export async function findUser(
+    options: UserOptions): Promise<User | undefined> {
 
-//     try {
-//         const { rows } = await psql.query(
-//             `SELECT * FROM users WHERE ${param[0]} = $1;`,
-//             [param[1]]
-//         );
+    const param = grabUsedParams(options);
+    if (!param) {
+        return;
+    }
 
-//         return rows[0] as User;
-//     } catch (err) {
-//         return;
-//     }
-// }
+    try {
+        return USER_REPO.findOne({ where: { [param.key]: param.value } });
+    } catch (err) {
+        return;
+    }
+}
 
-// /**
-//  * This is the cheaper version of the function to check the user existence.
-//  *
-//  * Checking user existence using the {@link findUser} can be expensive
-//  * and bad practice since it grabs the entire user property.
-//  *
-//  * @param options the options to find the user based on specific property.
-//  */
-// export async function doesUserExist(options: UserOptions): Promise<boolean> {
-//     const param = grabUsedParams(options);
-//     if (!param) {
-//         return false;
-//     }
+/**
+ * This is the cheaper version of the function to check the user existence.
+ *
+ * Checking user existence using the {@link findUser} can be expensive
+ * and bad practice since it grabs the entire user property.
+ *
+ * @param options the options to find the user based on specific property.
+ */
+export async function doesUserExist(options: UserOptions): Promise<boolean> {
+    const param = grabUsedParams(options);
+    if (!param) {
+        return false;
+    }
 
-//     try {
-//         const { rows } = await psql.query(
-//             `SELECT id FROM users WHERE ${param[0]} = $1;`,
-//             [param[1]]
-//         );
+    try {
+        const foundUser = await USER_REPO.createQueryBuilder('users')
+            .select(['id'])
+            .where(`${param.key} = :value`, { value: param.value })
+            .getOne();
 
-//         return Boolean(rows.length);
-//     } catch (err) {
-//         return false;
-//     }
-// }
+        return Boolean(foundUser);
+    } catch (err) {
+        return false;
+    }
+}
 
-// export { HASH_ROUNDS, UserParams };
+export { HASH_ROUNDS, UserParams };
