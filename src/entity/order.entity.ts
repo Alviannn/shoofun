@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import { Item } from './item.entity';
+import { Product } from './product.entity';
 import { Receipt } from './receipt.entity';
 
 @Entity({ name: 'orders' })
@@ -11,9 +11,9 @@ export class Order {
     @Column()
     quantity!: number;
 
-    @OneToOne(() => Item)
+    @OneToOne(() => Product)
     @JoinColumn()
-    item!: Item;
+    product!: Product;
 
     @ManyToOne(() => Receipt)
     @JoinColumn()
