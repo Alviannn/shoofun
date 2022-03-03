@@ -2,7 +2,6 @@
     "name": "shoofun",
     "version": "0.0.1",
     "description": "",
-    "main": "main.ts",
     "author": "Alviannn",
     "license": "MIT",
     "scripts": {
@@ -11,7 +10,8 @@
         "compile": "yarn clean && tsc",
         "clean": "rimraf ./dist",
         "lint": "eslint ./src",
-        "dev": "nodemon -e ts -x yarn auto"
+        "dev": "nodemon -e ts -x yarn auto",
+        "typeorm": "node ./node_modules/typeorm/cli.js"
     },
     "devDependencies": {
         "@types/bcrypt": "^5.0.0",
