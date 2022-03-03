@@ -5,15 +5,13 @@
         "module": "CommonJS",
         "outDir": "./dist/",
         "strict": true,
-        "sourceMap": false,
         "removeComments": true,
         "moduleResolution": "Node",
-        "newLine": "lf",
         "esModuleInterop": true,
-        "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "noFallthroughCasesInSwitch": true,
-        "resolveJsonModule": true
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true
     },
     "include": [
         "./src/*"

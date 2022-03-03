@@ -34,8 +34,8 @@
         "import/no-self-import": "error",
         "import/no-extraneous-dependencies": "error",
         "import/exports-last": "error",
-        "import/extensions": ["error", "never"],
         "import/newline-after-import": "error",
+        "import/extensions": ["error", "never"],
 
         // security
         "no-eval": "error",
@@ -67,10 +67,20 @@
         "semi": "error",
         "yoda": "warn",
 
-        "indent": ["error"],
         "comma-style": ["error", "last"],
         "quotes": ["error", "single"],
-        "linebreak-style": ["error", "unix"],
+        "indent": [
+            "error",
+            4,
+            {
+                // ignore decorators
+                "ignoredNodes": [
+                    "FunctionExpression > .params[decorators.length > 0]",
+                    "FunctionExpression > .params > :matches(Decorator, :not(:first-child))",
+                    "ClassBody.body > PropertyDefinition[decorators.length > 0] > .key"
+                ]
+            }
+        ],
         "max-len": [
             "error",
             {
