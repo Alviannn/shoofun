@@ -16,4 +16,4 @@ app.use(express.urlencoded({ extended: true }));
 // app.use('/v1/user', userRouter);
 // app.use('/v1/item', itemRouter);
 
-export { app };
+export default app;
