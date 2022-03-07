@@ -1,4 +1,4 @@
-import { User } from '../entity/user.entity';
+import User from '../entities/user.entity';
 
 type UserOptions = {
     id?: number,
