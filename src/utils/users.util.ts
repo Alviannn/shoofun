@@ -1,4 +1,3 @@
-import { getRepository } from 'typeorm';
 import { User } from '../entity/user.entity';
 
 type UserOptions = {
@@ -19,7 +18,6 @@ type UserParams = {
 };
 
 const HASH_ROUNDS = 12;
-const USER_REPO = getRepository(User);
 
 function grabUsedParams(options: UserOptions): UserParams | undefined {
     if (!options) {
@@ -53,7 +51,7 @@ export async function findUser(
     }
 
     try {
-        return USER_REPO.findOne({ where: { [param.key]: param.value } });
+        return User.findOne({ where: { [param.key]: param.value } });
     } catch (err) {
         return;
     }
@@ -74,7 +72,7 @@ export async function doesUserExist(options: UserOptions): Promise<boolean> {
     }
 
     try {
-        const foundUser = await USER_REPO.createQueryBuilder('users')
+        const foundUser = await User.createQueryBuilder('users')
             .select(['id'])
             .where(`${param.key} = :value`, { value: param.value })
             .getOne();
