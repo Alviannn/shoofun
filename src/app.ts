@@ -1,19 +1,19 @@
 import express from 'express';
+import cors from 'cors';
 import dotenv from 'dotenv';
-
-// import userRouter from './routes/users.route';
-// import itemRouter from './routes/items.route';
+import routes from './routes';
 
 dotenv.config();
+
 const app = express();
 
-// config
 app.set('view engine', 'ejs');
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// routes
-// app.use('/v1/user', userRouter);
-// app.use('/v1/item', itemRouter);
+// middlewares
+app.use(express.json());
+app.use(cors());
+
+// bind routes for all
+app.use('/', routes);
 
 export default app;
