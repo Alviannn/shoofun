@@ -1,5 +1,16 @@
 import joi from 'joi';
 
+type LoginUserType = {
+    username: string,
+    password: string
+};
+
+type RegisterUserType = LoginUserType & {
+    email: string,
+    displayName: string,
+    phoneNumber: string
+};
+
 export const registerUserSchema = joi.object({
     username: joi.string()
         .min(3)
@@ -40,7 +51,7 @@ export const registerUserSchema = joi.object({
         .regex(/[0-9]+/)
         .rule({ message: '{#label} must be numbers' })
         .required()
-});
+}) as joi.ObjectSchema<RegisterUserType>;
 
 export const loginUserSchema = joi.object({
     username: joi.string()
@@ -52,4 +63,4 @@ export const loginUserSchema = joi.object({
         .min(8)
         .max(64)
         .required()
-});
+}) as joi.ObjectSchema<LoginUserType>;
