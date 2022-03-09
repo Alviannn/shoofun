@@ -3,6 +3,7 @@ import User from '../entities/user.entity';
 import jwt from 'jsonwebtoken';
 import joi from 'joi';
 import httpStatus from 'http-status-codes';
+import config from '../configs/config';
 import * as utils from '../utils/users.util';
 
 import { Request, Response } from 'express';
@@ -81,9 +82,15 @@ export async function loginUser(req: Request, res: Response) {
         }
 
         const accessToken = jwt.sign(
-            { username: foundUser.username, email: foundUser.email },
-            process.env.ACCESS_TOKEN_SECRET!,
-            { expiresIn: '15s', notBefore: '5s' }
+            {
+                username: foundUser.username,
+                email: foundUser.email
+            },
+            config.jwt.accessSecret,
+            {
+                expiresIn: config.jwt.expireTime,
+                notBefore: config.jwt.notBeforeTime
+            }
         );
 
         return makeResponse({
