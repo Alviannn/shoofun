@@ -82,4 +82,22 @@ export async function doesUserExist(options: UserOptions): Promise<boolean> {
     }
 }
 
+export async function addAdminIfNotExists() {
+    const admin = User.create({
+        username: 'adoMin0s',
+        email: 'admin@admin.com',
+        password: '5S&jJazT6LViB@f8y8ac',
+        displayName: 'Admin',
+        phoneNumber: '0'
+    });
+
+    const userExists = await doesUserExist({
+        username: admin.username
+    });
+
+    if (!userExists) {
+        await admin.save();
+    }
+}
+
 export { UserParams };
