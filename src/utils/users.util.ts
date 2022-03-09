@@ -1,4 +1,6 @@
 import User from '../entities/user.entity';
+import bcrypt from 'bcrypt';
+import config from '../configs/config';
 
 type UserOptions = {
     id?: number,
@@ -96,6 +98,10 @@ export async function addAdminIfNotExists() {
     });
 
     if (!userExists) {
+        admin.password = await bcrypt.hash(
+            admin.password,
+            config.hash.rounds
+        );
         await admin.save();
     }
 }
