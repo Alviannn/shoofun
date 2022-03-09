@@ -31,7 +31,7 @@ export async function registerUser(req: Request, res: Response) {
         }).send(res);
     }
 
-    const hashedPwd = await bcrypt.hash(value!.password, utils.HASH_ROUNDS);
+    const hashedPwd = await bcrypt.hash(value!.password, config.hash.rounds);
     const user = User.create({ ...value, password: hashedPwd });
 
     try {

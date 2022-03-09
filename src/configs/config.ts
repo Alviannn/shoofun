@@ -9,6 +9,9 @@ const config = {
         refreshSecret: env.JWT_REFRESH_SECRET!,
         expireTime: '15m',
         notBeforeTime: '3s'
+    },
+    hash: {
+        rounds: 12
     }
 };
 

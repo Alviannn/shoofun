@@ -17,8 +17,6 @@ type UserParams = {
     value: string | number
 };
 
-const HASH_ROUNDS = 12;
-
 function grabUsedParams(options: UserOptions): UserParams | undefined {
     if (!options) {
         return;
@@ -84,4 +82,4 @@ export async function doesUserExist(options: UserOptions): Promise<boolean> {
     }
 }
 
-export { HASH_ROUNDS, UserParams };
+export { UserParams };
