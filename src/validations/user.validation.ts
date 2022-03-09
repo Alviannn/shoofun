@@ -1,0 +1,55 @@
+import joi from 'joi';
+
+export const registerUserSchema = joi.object({
+    username: joi.string()
+        .min(3)
+        .max(16)
+        .required(),
+
+    email: joi.string()
+        .max(64)
+        .email()
+        .required(),
+
+    password: joi.string()
+        .min(8)
+        .max(64)
+
+        .regex(/[0-9]/)
+        .rule({ message: '{#label} requires at least a number' })
+
+        .regex(/[a-z]/)
+        .rule({ message: '{#label} requires at least a lowercase character' })
+
+        .regex(/[A-Z]/)
+        .rule({ message: '{#label} requires at least an uppercase character' })
+
+        .regex(/[^a-zA-Z0-9]/)
+        .rule({ message: '{#label} requires at least a special character' })
+
+        .required(),
+
+    display: joi.string()
+        .max(64)
+        .regex(/[a-zA-Z ]+/).rule({ message: '{#label} must only be string' })
+        .required(),
+
+    phone: joi.string()
+        .min(8)
+        .max(64)
+        .regex(/[0-9]+/)
+        .rule({ message: '{#label} must be numbers' })
+        .required()
+});
+
+export const loginUserSchema = joi.object({
+    username: joi.string()
+        .min(3)
+        .max(16)
+        .required(),
+
+    password: joi.string()
+        .min(8)
+        .max(64)
+        .required()
+});

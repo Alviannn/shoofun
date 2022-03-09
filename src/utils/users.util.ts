@@ -72,12 +72,13 @@ export async function doesUserExist(options: UserOptions): Promise<boolean> {
     }
 
     try {
-        const foundUser = await User.createQueryBuilder('users')
+        const { key, value } = param;
+        const found = await User.createQueryBuilder('user')
             .select(['id'])
-            .where(`${param.key} = :value`, { value: param.value })
-            .getOne();
+            .where(`user.${key} = :val`, { val: value })
+            .getRawOne();
 
-        return Boolean(foundUser);
+        return Boolean(found);
     } catch (err) {
         return false;
     }
