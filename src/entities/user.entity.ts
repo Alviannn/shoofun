@@ -17,10 +17,10 @@ export default class User extends BaseEntity {
     password!: string;
 
     @Column({ length: 64 })
-    display!: string;
+    displayName!: string;
 
     @Column({ length: 64 })
-    phone!: string;
+    phoneNumber!: string;
 
     @OneToMany(() => Receipt, (receipt) => receipt.user)
     @JoinColumn()

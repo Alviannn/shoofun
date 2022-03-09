@@ -29,12 +29,12 @@ export const registerUserSchema = joi.object({
 
         .required(),
 
-    display: joi.string()
+    displayName: joi.string()
         .max(64)
         .regex(/[a-zA-Z ]+/).rule({ message: '{#label} must only be string' })
         .required(),
 
-    phone: joi.string()
+    phoneNumber: joi.string()
         .min(8)
         .max(64)
         .regex(/[0-9]+/)
