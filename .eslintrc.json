@@ -68,7 +68,7 @@
         "yoda": "warn",
 
         "comma-style": ["error", "last"],
-        "quotes": ["error", "single"],
+        "quotes": ["error", "single", { "avoidEscape": true }],
         "indent": [
             "error",
             4,
