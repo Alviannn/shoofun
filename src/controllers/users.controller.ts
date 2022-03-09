@@ -1,7 +1,6 @@
 import bcrypt from 'bcrypt';
 import User from '../entities/user.entity';
 import jwt from 'jsonwebtoken';
-import joi from 'joi';
 import httpStatus from 'http-status-codes';
 import config from '../configs/config';
 import * as utils from '../utils/users.util';
@@ -20,7 +19,7 @@ export async function registerUser(req: Request, res: Response) {
         }).send(res);
     }
 
-    const { value } = result as joi.ValidationResult<User>;
+    const { value } = result;
     const userExist = await utils.doesUserExist({ email: value!.email });
 
     if (userExist) {
@@ -59,8 +58,8 @@ export async function loginUser(req: Request, res: Response) {
         }).send(res);
     }
 
-    const { value: user } = result as joi.ValidationResult<User>;
-    const foundUser = await utils.findUser({ username: user!.username });
+    const { value } = result;
+    const foundUser = await utils.findUser({ username: value!.username });
 
     if (!foundUser) {
         return makeResponse({
@@ -72,7 +71,7 @@ export async function loginUser(req: Request, res: Response) {
 
     try {
         // the password from user object isn't hashed, we can just check it.
-        const success = bcrypt.compare(user!.password, foundUser.password);
+        const success = bcrypt.compare(value!.password, foundUser.password);
         if (!success) {
             return makeResponse({
                 success: false,
