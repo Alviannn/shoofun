@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { newProductSchema } from '../validations/product.validation';
 import { makeResponse } from '../utils/api.util';
+import { StatusCodes } from 'http-status-codes';
 
 import Product from '../entities/product.entity';
-import httpStatus from 'http-status-codes';
 
 export async function addProduct(req: Request, res: Response) {
     const { body } = req;
@@ -11,7 +11,7 @@ export async function addProduct(req: Request, res: Response) {
 
     if (result.error) {
         return makeResponse({
-            statusCode: httpStatus.BAD_REQUEST,
+            statusCode: StatusCodes.BAD_REQUEST,
             success: false,
             message: result.error.message
         }).send(res);
@@ -28,7 +28,7 @@ export async function addProduct(req: Request, res: Response) {
     } catch (err) {
         return makeResponse({
             success: false,
-            statusCode: httpStatus.INTERNAL_SERVER_ERROR,
+            statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
             message: 'Unexpected server error'
         }).send(res);
     }
@@ -42,7 +42,7 @@ export async function getProduct(req: Request, res: Response) {
         if (!foundProduct) {
             return makeResponse({
                 success: false,
-                statusCode: httpStatus.NOT_FOUND,
+                statusCode: StatusCodes.NOT_FOUND,
                 message: 'Cannot find product'
             }).send(res);
         }
@@ -55,7 +55,7 @@ export async function getProduct(req: Request, res: Response) {
     } catch (err) {
         return makeResponse({
             success: false,
-            statusCode: httpStatus.INTERNAL_SERVER_ERROR,
+            statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
             message: 'Unexpected server error'
         }).send(res);
     }
@@ -69,7 +69,7 @@ export async function deleteProduct(req: Request, res: Response) {
         if (!foundProduct) {
             return makeResponse({
                 success: false,
-                statusCode: httpStatus.NOT_FOUND,
+                statusCode: StatusCodes.NOT_FOUND,
                 message: 'Cannot find product'
             }).send(res);
         }
@@ -80,7 +80,7 @@ export async function deleteProduct(req: Request, res: Response) {
     } catch (err) {
         return makeResponse({
             success: false,
-            statusCode: httpStatus.INTERNAL_SERVER_ERROR,
+            statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
             message: 'Unexpected server error'
         }).send(res);
     }
@@ -98,7 +98,7 @@ export async function getAllProducts(_: Request, res: Response) {
     } catch (err) {
         return makeResponse({
             success: false,
-            statusCode: httpStatus.INTERNAL_SERVER_ERROR,
+            statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
             message: 'Unexpected server error'
         }).send(res);
     }

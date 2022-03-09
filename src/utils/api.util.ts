@@ -1,5 +1,6 @@
 import express from 'express';
-import httpStatus from 'http-status-codes';
+
+import { StatusCodes } from 'http-status-codes';
 
 class ApiResponse {
 
@@ -74,7 +75,7 @@ export type ApiResponseOptions = {
 
 export function makeResponse(options: ApiResponseOptions) {
     return new ApiResponse(
-        options.statusCode ?? httpStatus.OK,
+        options.statusCode ?? StatusCodes.OK,
         options.success ?? true,
         options.message
     );

@@ -1,15 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import { makeResponse } from '../utils/api.util';
+import { StatusCodes } from 'http-status-codes';
 
 import jwt from 'jsonwebtoken';
 import config from '../configs/config';
-import httpStatus from 'http-status-codes';
 
 function authHandler(req: Request, res: Response, next: NextFunction) {
     const header = req.header('authorization');
     const unauthorizedRes = makeResponse({
         success: false,
-        statusCode: httpStatus.UNAUTHORIZED,
+        statusCode: StatusCodes.UNAUTHORIZED,
         message: "You don't have an account session"
     });
 

@@ -1,10 +1,10 @@
 import bcrypt from 'bcrypt';
 import User from '../entities/user.entity';
 import jwt from 'jsonwebtoken';
-import httpStatus from 'http-status-codes';
 import config from '../configs/config';
 import * as utils from '../utils/users.util';
 
+import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from 'express';
 import { makeResponse } from '../utils/api.util';
 import { registerUserSchema, loginUserSchema } from '../validations/user.validation';
@@ -13,7 +13,7 @@ export async function registerUser(req: Request, res: Response) {
     const result = registerUserSchema.validate(req.body);
     if (result.error) {
         return makeResponse({
-            statusCode: httpStatus.BAD_REQUEST,
+            statusCode: StatusCodes.BAD_REQUEST,
             success: false,
             message: result.error.message
         }).send(res);
@@ -25,7 +25,7 @@ export async function registerUser(req: Request, res: Response) {
     if (userExist) {
         return makeResponse({
             success: false,
-            statusCode: httpStatus.BAD_REQUEST,
+            statusCode: StatusCodes.BAD_REQUEST,
             message: 'User is already registered'
         }).send(res);
     }
@@ -38,7 +38,7 @@ export async function registerUser(req: Request, res: Response) {
     } catch (err) {
         return makeResponse({
             success: false,
-            statusCode: httpStatus.INTERNAL_SERVER_ERROR,
+            statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
             message: 'Failed to register user'
         }).send(res);
     }
@@ -52,7 +52,7 @@ export async function loginUser(req: Request, res: Response) {
     const result = loginUserSchema.validate(body);
     if (result.error) {
         return makeResponse({
-            statusCode: httpStatus.BAD_REQUEST,
+            statusCode: StatusCodes.BAD_REQUEST,
             success: false,
             message: result.error.message
         }).send(res);
@@ -64,7 +64,7 @@ export async function loginUser(req: Request, res: Response) {
     if (!foundUser) {
         return makeResponse({
             success: false,
-            statusCode: httpStatus.BAD_REQUEST,
+            statusCode: StatusCodes.BAD_REQUEST,
             message: 'Username or password is incorrect'
         }).send(res);
     }
@@ -75,7 +75,7 @@ export async function loginUser(req: Request, res: Response) {
         if (!success) {
             return makeResponse({
                 success: false,
-                statusCode: httpStatus.BAD_REQUEST,
+                statusCode: StatusCodes.BAD_REQUEST,
                 message: 'Username or password is incorrect'
             }).send(res);
         }
@@ -100,7 +100,7 @@ export async function loginUser(req: Request, res: Response) {
     } catch (err) {
         return makeResponse({
             success: false,
-            statusCode: httpStatus.INTERNAL_SERVER_ERROR,
+            statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
             message: 'An error occurred on login'
         }).send(res);
     }
