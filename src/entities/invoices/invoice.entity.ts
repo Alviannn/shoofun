@@ -1,8 +1,18 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, OneToMany, BaseEntity } from 'typeorm';
 import { DateTime } from 'luxon';
+import {
+    BaseEntity, Entity,
+    Column, PrimaryGeneratedColumn,
+    JoinColumn, ManyToOne, OneToMany,
+    ValueTransformer
+} from 'typeorm';
 
 import User from '../user.entity';
 import InvoiceItem from './invoice-item.entity';
+
+const dateTransformer: ValueTransformer = {
+    from: (date: Date) => DateTime.fromJSDate(date),
+    to: (date: DateTime) => date.toJSDate()
+};
 
 @Entity({ name: 'invoices' })
 export default class Invoice extends BaseEntity {
@@ -17,10 +27,7 @@ export default class Invoice extends BaseEntity {
     @Column({
         name: 'purchase_date',
         type: 'timestamp',
-        transformer: {
-            from: (date: Date) => DateTime.fromJSDate(date),
-            to: (date: DateTime) => date.toJSDate()
-        },
+        transformer: dateTransformer,
         default: DateTime.utc()
     })
     purchaseDate!: DateTime;

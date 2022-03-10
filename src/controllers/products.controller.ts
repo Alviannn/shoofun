@@ -50,7 +50,7 @@ export async function getProduct(req: Request, res: Response) {
         return makeResponse({
             message: 'Product has been found'
         })
-            .add('product', foundProduct)
+            .add('product', foundProduct.toFiltered())
             .send(res);
     } catch (err) {
         return makeResponse({
@@ -98,7 +98,7 @@ export async function getAllProducts(_: Request, res: Response) {
         return makeResponse({
             message: 'All products have been found'
         })
-            .add('products', products)
+            .add('products', products.map((prod) => prod.toFiltered()))
             .send(res);
     } catch (err) {
         return makeResponse({
