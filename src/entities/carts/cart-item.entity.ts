@@ -6,13 +6,19 @@ import Cart from './cart.entity';
 @Entity({ name: 'cart_items' })
 export default class CartItem extends BaseEntity {
 
-    @PrimaryColumn()
-    @ManyToOne(() => Cart, (cart) => cart.cartItems)
+    @ManyToOne(
+        () => Cart,
+        (cart) => cart.cartItems,
+        { primary: true }
+    )
     @JoinColumn({ name: 'cart_id' })
     cart!: Cart;
 
-    @PrimaryColumn()
-    @ManyToOne(() => Product, (product) => product.cartItems)
+    @ManyToOne(
+        () => Product,
+        (product) => product.cartItems,
+        { primary: true }
+    )
     @JoinColumn({ name: 'product_id' })
     product!: Product;
 
