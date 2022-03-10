@@ -59,7 +59,7 @@ export async function loginUser(req: Request, res: Response) {
     }
 
     const { value } = result;
-    const foundUser = await utils.findUser({ username: value!.username });
+    const foundUser = await utils.findUser({ email: value!.email });
 
     if (!foundUser) {
         return makeResponse({

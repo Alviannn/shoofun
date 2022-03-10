@@ -93,9 +93,7 @@ export async function addAdminIfNotExists() {
         phoneNumber: '0'
     });
 
-    const userExists = await doesUserExist({
-        username: admin.username
-    });
+    const userExists = await doesUserExist({ email: admin.email });
 
     if (!userExists) {
         admin.password = await bcrypt.hash(
