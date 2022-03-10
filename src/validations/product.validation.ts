@@ -3,7 +3,8 @@ import joi from 'joi';
 type NewProductType = {
     name: string,
     price: number,
-    description: string
+    description: string,
+    weight: number
 };
 
 export const newProductSchema = joi.object({
@@ -17,5 +18,8 @@ export const newProductSchema = joi.object({
     description: joi.string()
         .min(5)
         .max(256)
+        .required(),
+
+    weight: joi.number()
         .required()
 }) as joi.ObjectSchema<NewProductType>;
