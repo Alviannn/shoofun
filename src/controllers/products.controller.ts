@@ -74,6 +74,9 @@ export async function deleteProduct(req: Request, res: Response) {
             }).send(res);
         }
 
+        foundProduct.isDeleted = true;
+        await foundProduct.save();
+
         return makeResponse({
             message: 'Product has been deleted'
         }).send(res);
