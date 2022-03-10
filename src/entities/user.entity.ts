@@ -1,5 +1,6 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn, JoinColumn, BaseEntity } from 'typeorm';
-import Receipt from './receipt.entity';
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+
+import Invoice from './invoices/invoice.entity';
 
 @Entity({ name: 'users' })
 export default class User extends BaseEntity {
@@ -16,14 +17,13 @@ export default class User extends BaseEntity {
     @Column({ length: 64 })
     password!: string;
 
-    @Column({ length: 64 })
+    @Column({ name: 'display_name', length: 64 })
     displayName!: string;
 
-    @Column({ length: 64 })
+    @Column({ name: 'phone_number', length: 64 })
     phoneNumber!: string;
 
-    @OneToMany(() => Receipt, (receipt) => receipt.user)
-    @JoinColumn()
-    receipts!: Receipt[];
+    @OneToMany(() => Invoice, (invoice) => invoice.user)
+    invoices!: Invoice[];
 
 }

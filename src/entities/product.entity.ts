@@ -1,4 +1,7 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import CartItem from './carts/cart-item.entity';
+
+import InvoiceItem from './invoices/invoice-item.entity';
 
 @Entity({ name: 'products' })
 export default class Product extends BaseEntity {
@@ -14,5 +17,17 @@ export default class Product extends BaseEntity {
 
     @Column({ length: 256 })
     description!: string;
+
+    @Column({ type: 'decimal', scale: 2 })
+    weight!: number;
+
+    @Column({ name: 'is_deleted' })
+    isDeleted!: boolean;
+
+    @OneToMany(() => InvoiceItem, (item) => item.product)
+    invoiceItems!: InvoiceItem[];
+
+    @OneToMany(() => CartItem, (item) => item.cart)
+    cartItems!: CartItem[];
 
 }
