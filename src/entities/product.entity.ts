@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import CartItem from './carts/cart-item.entity';
 
+import CartItem from './carts/cart-item.entity';
 import InvoiceItem from './invoices/invoice-item.entity';
 
 @Entity({ name: 'products' })

@@ -25,9 +25,6 @@ export default class Invoice extends BaseEntity {
     })
     purchaseDate!: DateTime;
 
-    @Column({ type: 'decimal' })
-    weight!: number;
-
     @OneToMany(() => InvoiceItem, (item) => item.invoice)
     invoiceItems!: InvoiceItem[];
 

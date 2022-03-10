@@ -8,12 +8,12 @@ export default class CartItem extends BaseEntity {
 
     @PrimaryColumn()
     @ManyToOne(() => Cart, (cart) => cart.cartItems)
-    @JoinColumn()
+    @JoinColumn({ name: 'cart_id' })
     cart!: Cart;
 
     @PrimaryColumn()
     @ManyToOne(() => Product, (product) => product.cartItems)
-    @JoinColumn()
+    @JoinColumn({ name: 'product_id' })
     product!: Product;
 
     @Column({ type: 'integer', default: 1 })

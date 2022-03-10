@@ -8,12 +8,12 @@ export default class InvoiceItem extends BaseEntity {
 
     @PrimaryColumn()
     @ManyToOne(() => Invoice, (invoice) => invoice.invoiceItems)
-    @JoinColumn()
+    @JoinColumn({ name: 'invoice_id' })
     invoice!: Invoice;
 
     @PrimaryColumn()
     @ManyToOne(() => Product, (product) => product.invoiceItems)
-    @JoinColumn()
+    @JoinColumn({ name: 'product_id' })
     product!: Product;
 
     @Column({ name: 'current_price' })

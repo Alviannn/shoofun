@@ -15,7 +15,7 @@ export default class Cart extends BaseEntity {
     id!: number;
 
     @ManyToOne(() => User)
-    @JoinColumn()
+    @JoinColumn({ name: 'user_id' })
     user!: User;
 
     @Column({ type: 'bit' })
