@@ -39,7 +39,7 @@ export async function getProduct(req: Request, res: Response) {
 
     try {
         const foundProduct = await Product.findOne(productId);
-        if (!foundProduct) {
+        if (!foundProduct || foundProduct.isDeleted) {
             return makeResponse({
                 success: false,
                 statusCode: StatusCodes.NOT_FOUND,
@@ -91,7 +91,9 @@ export async function deleteProduct(req: Request, res: Response) {
 
 export async function getAllProducts(_: Request, res: Response) {
     try {
-        const products = await Product.find();
+        const products = await Product.find({
+            where: { isDeleted: false }
+        });
 
         return makeResponse({
             message: 'All products have been found'
