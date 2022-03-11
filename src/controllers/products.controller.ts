@@ -1,24 +1,13 @@
 import { Request, Response } from 'express';
-import { newProductSchema } from '../validations/product.validation';
+import { NewProductType } from '../validations/product.validation';
 import { StatusCodes } from 'http-status-codes';
-
-import Product from '../entities/product.entity';
 import { sendResponse } from '../utils/api.util';
 
+import Product from '../entities/product.entity';
+
 export async function addProduct(req: Request, res: Response) {
-    const { body } = req;
-    const result = newProductSchema.validate(body);
-
-    if (result.error) {
-        return sendResponse(res, {
-            statusCode: StatusCodes.BAD_REQUEST,
-            success: false,
-            message: result.error.message
-        });
-    }
-
-    const { value } = result;
-    const product = Product.create(value);
+    const body = req.body as NewProductType;
+    const product = Product.create(body);
 
     try {
         await product.save();

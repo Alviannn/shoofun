@@ -6,21 +6,15 @@ import * as utils from '../utils/users.util';
 
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from 'express';
-import { registerUserSchema, loginUserSchema } from '../validations/user.validation';
 import { sendResponse } from '../utils/api.util';
+import {
+    RegisterUserType,
+    LoginUserType
+} from '../validations/user.validation';
 
 export async function registerUser(req: Request, res: Response) {
-    const result = registerUserSchema.validate(req.body);
-    if (result.error) {
-        return sendResponse(res, {
-            statusCode: StatusCodes.BAD_REQUEST,
-            success: false,
-            message: result.error.message
-        });
-    }
-
-    const { value } = result;
-    const userExist = await utils.doesUserExist({ email: value!.email });
+    const body = req.body as RegisterUserType;
+    const userExist = await utils.doesUserExist({ email: body.email });
 
     if (userExist) {
         return sendResponse(res, {
@@ -30,8 +24,8 @@ export async function registerUser(req: Request, res: Response) {
         });
     }
 
-    const hashedPwd = await bcrypt.hash(value!.password, config.hash.rounds);
-    const user = User.create({ ...value, password: hashedPwd });
+    const hashedPwd = await bcrypt.hash(body.password, config.hash.rounds);
+    const user = User.create({ ...body, password: hashedPwd });
 
     try {
         await user.save();
@@ -49,19 +43,8 @@ export async function registerUser(req: Request, res: Response) {
 }
 
 export async function loginUser(req: Request, res: Response) {
-    const { body } = req;
-
-    const result = loginUserSchema.validate(body);
-    if (result.error) {
-        return sendResponse(res, {
-            statusCode: StatusCodes.BAD_REQUEST,
-            success: false,
-            message: result.error.message
-        });
-    }
-
-    const { value } = result;
-    const foundUser = await utils.findUser({ email: value!.email });
+    const body = req.body as LoginUserType;
+    const foundUser = await utils.findUser({ email: body.email });
 
     if (!foundUser) {
         return sendResponse(res, {
@@ -73,7 +56,7 @@ export async function loginUser(req: Request, res: Response) {
 
     try {
         // the password from user object isn't hashed, we can just check it.
-        const success = bcrypt.compare(value!.password, foundUser.password);
+        const success = bcrypt.compare(body.password, foundUser.password);
         if (!success) {
             return sendResponse(res, {
                 success: false,
@@ -96,9 +79,7 @@ export async function loginUser(req: Request, res: Response) {
 
         return sendResponse(res, {
             message: 'User successfully loggedin',
-            data: {
-                accessToken
-            }
+            data: { accessToken }
         });
     } catch (err) {
         return sendResponse(res, {
