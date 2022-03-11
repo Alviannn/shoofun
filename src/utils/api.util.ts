@@ -21,7 +21,7 @@ export function sendResponse<T>(res: Response, params: ApiResponseParams<T>) {
     const code = statusCode ?? StatusCodes.OK;
 
     const response = {
-        success: (isSuccess ? 'success' : 'fail'),
+        status: (isSuccess ? 'success' : 'fail'),
         ...newParams
     };
 
