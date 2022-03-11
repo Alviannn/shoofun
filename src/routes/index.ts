@@ -33,10 +33,10 @@ const allRoutes: CommonRoute[] = [
 // 'global' route, then bind it to the server.
 //
 // In the end, it'll produce like: /v1/todo/add
-const router = Router();
+const globalRouter = Router();
 for (const route of allRoutes) {
     const { version, path, router } = route;
-    router.use(`/v${version}/${path}`, router);
+    globalRouter.use(`/v${version}/${path}`, router);
 }
 
-export default router;
+export default globalRouter;
