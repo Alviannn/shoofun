@@ -26,19 +26,8 @@ export async function addProduct(req: Request, res: Response) {
 export async function getProduct(req: Request, res: Response) {
     const { productId } = req.params;
 
-    let parsedProductId: number;
     try {
-        parsedProductId = parseInt(productId);
-    } catch (err) {
-        return sendResponse(res, {
-            success: false,
-            statusCode: StatusCodes.BAD_REQUEST,
-            message: 'productId must be number'
-        });
-    }
-
-    try {
-        const foundProduct = await Product.findOne(parsedProductId);
+        const foundProduct = await Product.findOne(parseInt(productId));
         if (!foundProduct || foundProduct.isDeleted) {
             return sendResponse(res, {
                 success: false,
@@ -65,19 +54,8 @@ export async function getProduct(req: Request, res: Response) {
 export async function deleteProduct(req: Request, res: Response) {
     const { productId } = req.params;
 
-    let parsedProductId: number;
     try {
-        parsedProductId = parseInt(productId);
-    } catch (err) {
-        return sendResponse(res, {
-            success: false,
-            statusCode: StatusCodes.BAD_REQUEST,
-            message: 'productId must be number'
-        });
-    }
-
-    try {
-        const foundProduct = await Product.findOne(parsedProductId);
+        const foundProduct = await Product.findOne(parseInt(productId));
         if (!foundProduct) {
             return sendResponse(res, {
                 success: false,

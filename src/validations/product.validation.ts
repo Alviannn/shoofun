@@ -23,3 +23,9 @@ export const newProductSchema = joi.object({
     weight: joi.number()
         .required()
 });
+
+export const idProductSchema = joi.object({
+    productId: joi.number()
+        .min(1)
+        .required()
+});
