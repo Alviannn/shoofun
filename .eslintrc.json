@@ -68,7 +68,14 @@
         "yoda": "warn",
 
         "comma-style": ["error", "last"],
-        "quotes": ["error", "single", { "avoidEscape": true }],
+        "quotes": [
+            "error",
+            "single",
+            {
+                // allows to use other quotes when necessary
+                "avoidEscape": true
+            }
+        ],
         "indent": [
             "error",
             4,
@@ -84,8 +91,9 @@
         "max-len": [
             "error",
             {
+                // urls can be long, although make it short if possible
                 "ignoreUrls": true,
-                "ignoreStrings": true,
+                // when making paragraphs, the text can be long
                 "ignoreTemplateLiterals": true
             }
         ]
