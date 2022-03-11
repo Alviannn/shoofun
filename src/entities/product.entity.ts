@@ -41,7 +41,7 @@ export default class Product extends BaseEntity {
     cartItems!: CartItem[];
 
     toFiltered() {
-        const cloned = { ...this } as any;
+        const cloned = { ...this } as Record<string, unknown>;
         delete cloned.isDeleted;
 
         return cloned;

@@ -1,4 +1,8 @@
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+    BaseEntity, Entity,
+    Column, PrimaryGeneratedColumn,
+    OneToMany
+} from 'typeorm';
 
 import Invoice from './invoices/invoice.entity';
 import Cart from './carts/cart.entity';
