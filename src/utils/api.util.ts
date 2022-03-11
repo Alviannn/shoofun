@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-type ApiResponseParams<T> = {
+export type ApiResponseParams<T> = {
     statusCode?: number,
     success?: boolean,
     message: string,
