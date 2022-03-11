@@ -1,6 +1,6 @@
 import joi from 'joi';
 
-type NewProductType = {
+export type NewProductType = {
     name: string,
     price: number,
     description: string,
@@ -22,4 +22,4 @@ export const newProductSchema = joi.object({
 
     weight: joi.number()
         .required()
-}) as joi.ObjectSchema<NewProductType>;
+});

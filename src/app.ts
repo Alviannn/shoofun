@@ -6,11 +6,11 @@ const app = express();
 
 app.set('view engine', 'ejs');
 
-// middlewares
+// global middlewares
 app.use(express.json());
 app.use(cors());
 
-// bind routes for all
+// bind 'global' router to all routes
 app.use('/', routes);
 
 export default app;
