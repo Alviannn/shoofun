@@ -6,28 +6,28 @@ import * as utils from '../utils/users.util';
 
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from 'express';
-import { makeResponse } from '../utils/api.util';
 import { registerUserSchema, loginUserSchema } from '../validations/user.validation';
+import { sendResponse } from '../utils/api.util';
 
 export async function registerUser(req: Request, res: Response) {
     const result = registerUserSchema.validate(req.body);
     if (result.error) {
-        return makeResponse({
+        return sendResponse(res, {
             statusCode: StatusCodes.BAD_REQUEST,
             success: false,
             message: result.error.message
-        }).send(res);
+        });
     }
 
     const { value } = result;
     const userExist = await utils.doesUserExist({ email: value!.email });
 
     if (userExist) {
-        return makeResponse({
+        return sendResponse(res, {
             success: false,
             statusCode: StatusCodes.BAD_REQUEST,
             message: 'User is already registered'
-        }).send(res);
+        });
     }
 
     const hashedPwd = await bcrypt.hash(value!.password, config.hash.rounds);
@@ -36,14 +36,16 @@ export async function registerUser(req: Request, res: Response) {
     try {
         await user.save();
     } catch (err) {
-        return makeResponse({
+        return sendResponse(res, {
             success: false,
             statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
             message: 'Failed to register user'
-        }).send(res);
+        });
     }
 
-    return makeResponse({ message: 'Successfully registered new user' }).send(res);
+    return sendResponse(res, {
+        message: 'Successfully registered new user'
+    });
 }
 
 export async function loginUser(req: Request, res: Response) {
@@ -51,33 +53,33 @@ export async function loginUser(req: Request, res: Response) {
 
     const result = loginUserSchema.validate(body);
     if (result.error) {
-        return makeResponse({
+        return sendResponse(res, {
             statusCode: StatusCodes.BAD_REQUEST,
             success: false,
             message: result.error.message
-        }).send(res);
+        });
     }
 
     const { value } = result;
     const foundUser = await utils.findUser({ email: value!.email });
 
     if (!foundUser) {
-        return makeResponse({
+        return sendResponse(res, {
             success: false,
             statusCode: StatusCodes.BAD_REQUEST,
             message: 'Username or password is incorrect'
-        }).send(res);
+        });
     }
 
     try {
         // the password from user object isn't hashed, we can just check it.
         const success = bcrypt.compare(value!.password, foundUser.password);
         if (!success) {
-            return makeResponse({
+            return sendResponse(res, {
                 success: false,
                 statusCode: StatusCodes.BAD_REQUEST,
                 message: 'Username or password is incorrect'
-            }).send(res);
+            });
         }
 
         const accessToken = jwt.sign(
@@ -92,16 +94,17 @@ export async function loginUser(req: Request, res: Response) {
             }
         );
 
-        return makeResponse({
-            message: 'User successfully loggedin'
-        })
-            .add('accessToken', accessToken)
-            .send(res);
+        return sendResponse(res, {
+            message: 'User successfully loggedin',
+            data: {
+                accessToken
+            }
+        });
     } catch (err) {
-        return makeResponse({
+        return sendResponse(res, {
             success: false,
             statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
             message: 'An error occurred on login'
-        }).send(res);
+        });
     }
 }

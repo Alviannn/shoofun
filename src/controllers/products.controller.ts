@@ -1,20 +1,20 @@
 import { Request, Response } from 'express';
 import { newProductSchema } from '../validations/product.validation';
-import { makeResponse } from '../utils/api.util';
 import { StatusCodes } from 'http-status-codes';
 
 import Product from '../entities/product.entity';
+import { sendResponse } from '../utils/api.util';
 
 export async function addProduct(req: Request, res: Response) {
     const { body } = req;
     const result = newProductSchema.validate(body);
 
     if (result.error) {
-        return makeResponse({
+        return sendResponse(res, {
             statusCode: StatusCodes.BAD_REQUEST,
             success: false,
             message: result.error.message
-        }).send(res);
+        });
     }
 
     const { value } = result;
@@ -22,70 +22,93 @@ export async function addProduct(req: Request, res: Response) {
 
     try {
         await product.save();
-        return makeResponse({
+        return sendResponse(res, {
             message: 'Successfully added new product'
-        }).send(res);
+        });
     } catch (err) {
-        return makeResponse({
+        return sendResponse(res, {
             success: false,
             statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
             message: 'Unexpected server error'
-        }).send(res);
+        });
     }
 }
 
 export async function getProduct(req: Request, res: Response) {
     const { productId } = req.params;
 
+    let parsedProductId: number;
     try {
-        const foundProduct = await Product.findOne(productId);
+        parsedProductId = parseInt(productId);
+    } catch (err) {
+        return sendResponse(res, {
+            success: false,
+            statusCode: StatusCodes.BAD_REQUEST,
+            message: 'productId must be number'
+        });
+    }
+
+    try {
+        const foundProduct = await Product.findOne(parsedProductId);
         if (!foundProduct || foundProduct.isDeleted) {
-            return makeResponse({
+            return sendResponse(res, {
                 success: false,
                 statusCode: StatusCodes.NOT_FOUND,
                 message: 'Cannot find product'
-            }).send(res);
+            });
         }
 
-        return makeResponse({
-            message: 'Product has been found'
-        })
-            .add('product', foundProduct.toFiltered())
-            .send(res);
+        return sendResponse(res, {
+            message: 'Product has been found',
+            data: {
+                product: foundProduct.toFiltered()
+            }
+        });
     } catch (err) {
-        return makeResponse({
+        return sendResponse(res, {
             success: false,
             statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
             message: 'Unexpected server error'
-        }).send(res);
+        });
     }
 }
 
 export async function deleteProduct(req: Request, res: Response) {
     const { productId } = req.params;
 
+    let parsedProductId: number;
     try {
-        const foundProduct = await Product.findOne(productId);
+        parsedProductId = parseInt(productId);
+    } catch (err) {
+        return sendResponse(res, {
+            success: false,
+            statusCode: StatusCodes.BAD_REQUEST,
+            message: 'productId must be number'
+        });
+    }
+
+    try {
+        const foundProduct = await Product.findOne(parsedProductId);
         if (!foundProduct) {
-            return makeResponse({
+            return sendResponse(res, {
                 success: false,
                 statusCode: StatusCodes.NOT_FOUND,
                 message: 'Cannot find product'
-            }).send(res);
+            });
         }
 
         foundProduct.isDeleted = true;
         await foundProduct.save();
 
-        return makeResponse({
+        return sendResponse(res, {
             message: 'Product has been deleted'
-        }).send(res);
+        });
     } catch (err) {
-        return makeResponse({
+        return sendResponse(res, {
             success: false,
             statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
             message: 'Unexpected server error'
-        }).send(res);
+        });
     }
 }
 
@@ -95,16 +118,17 @@ export async function getAllProducts(_: Request, res: Response) {
             where: { isDeleted: false }
         });
 
-        return makeResponse({
-            message: 'All products have been found'
-        })
-            .add('products', products.map((prod) => prod.toFiltered()))
-            .send(res);
+        return sendResponse(res, {
+            message: 'All products have been found',
+            data: {
+                products: products.map((prod) => prod.toFiltered())
+            }
+        });
     } catch (err) {
-        return makeResponse({
+        return sendResponse(res, {
             success: false,
             statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
             message: 'Unexpected server error'
-        }).send(res);
+        });
     }
 }
