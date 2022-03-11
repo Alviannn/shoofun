@@ -4,19 +4,16 @@ import usersRouter from './users.route';
 import productsRouter from './products.route';
 
 type CommonRoute = {
-    /** the current routing version
-     * starts at 1 */
+    /** the current routing version (starts at 1) */
     version: number,
-    /** the endpoint path
-     * don't start with '/' */
+    /** the endpoint path name (don't start with '/') */
     path: string,
-    /** the router object for this certain endpoint */
+    /** the router for this specific endpoint */
     router: Router
 };
 
 // All of the routes you've created within the 'routes' folder
-// must be inserted here to register them
-// and bind it to your server
+// must be registered here, and it'll bind it to the server.
 const allRoutes: CommonRoute[] = [
     {
         version: 1,
@@ -30,17 +27,16 @@ const allRoutes: CommonRoute[] = [
     }
 ];
 
-// Inserts all routes to the current router
+// Insert all routes to the 'global' router
 //
-// We're making the routing management easier for you
-// and this won't require you to import any routes manually
+// Automatically combine all router into this
+// 'global' route, then bind it to the server.
 //
-// To use this, you can add `import routes from './routes'` in `app.ts`
-// once that's done you can bind the `routes` to all route (or the '/').
+// In the end, it'll produce like: /v1/todo/add
 const router = Router();
 for (const route of allRoutes) {
-    // will create something like `/v1/add-todo`
-    router.use(`/v${route.version}/${route.path}`, route.router);
+    const { version, path, router } = route;
+    router.use(`/v${version}/${path}`, router);
 }
 
 export default router;
